@@ -18,3 +18,13 @@ public function is_request_authenticated($request) {
     }
     return new WP_Error('authentication_failed', 'Authentication failed.', ['status' => 401]);
 }
+
+// Map Cool Kid roles to WordPress roles
+private function get_wp_role($role) {
+    $role_mapping = [
+        'Cool Kid' => 'cool_kid',
+        'Cooler Kid' => 'cooler_kid',
+        'Coolest Kid' => 'coolest_kid',
+    ];
+    return $role_mapping[$role] ?? null;
+}
