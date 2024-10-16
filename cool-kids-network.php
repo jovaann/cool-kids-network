@@ -10,6 +10,8 @@ Author: Jovan Kitanovic
 add_action('wp_enqueue_scripts', 'ckn_enqueue_styles');
 function ckn_enqueue_styles() {
     wp_enqueue_style('ckn-style', plugins_url('assets/styles.css', __FILE__));
+    // Add wp-admin ajax url to be available in JS file
+    wp_localize_script('ckn-script', 'ajaxurl', admin_url('admin-ajax.php'));
 }
 
 // Enqueue frontend scripts
