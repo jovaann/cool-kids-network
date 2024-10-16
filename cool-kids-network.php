@@ -104,3 +104,8 @@ function ckn_deactivate_plugin() {
     remove_role('cooler_kid');
     remove_role('coolest_kid');
 }
+
+// Shortcodes for registration, login, and character views
+add_shortcode('ckn_registration', 'ckn_render_registration_form');
+add_shortcode('ckn_login', 'ckn_render_login_form');
+add_shortcode('ckn_character', 'ckn_render_character_view');
