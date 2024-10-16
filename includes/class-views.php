@@ -38,3 +38,33 @@ function ckn_render_registration_form() {
         </div>
     ';
 }
+
+// Login logic
+function ckn_render_login_form() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $email = sanitize_email($_POST['email']);
+        $user = get_user_by('email', $email);
+
+        if (!$user) {
+            return '<div class="ckn-message">User not found.</div>';
+        }
+
+        wp_set_current_user($user->ID);
+        wp_set_auth_cookie($user->ID);
+
+        wp_redirect(home_url('/my-account'));
+        exit;
+    }
+
+    // Login form
+    return '
+        <div class="ckn-form-container">
+            <h3 class="ckn-section-title">Login</h3>
+            <form method="POST" class="ckn-form">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" class="ckn-input" required>
+                <button type="submit" class="ckn-button">Login</button>
+            </form>
+        </div>
+    ';
+}
