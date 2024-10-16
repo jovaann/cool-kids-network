@@ -70,3 +70,29 @@ function ckn_activate_plugin() {
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
 }
+
+// Hook into user role changes
+add_action('set_user_role', 'ckn_update_character_role', 10, 3);
+
+function ckn_update_character_role($user_id, $new_role, $old_roles) {
+    global $wpdb;
+
+    $role_mapping = [
+        'cool_kid' => 'Cool Kid',
+        'cooler_kid' => 'Cooler Kid',
+        'coolest_kid' => 'Coolest Kid',
+    ];
+
+    if (isset($role_mapping[$new_role])) {
+        $mapped_role = $role_mapping[$new_role];
+
+        $table_name = $wpdb->prefix . 'ckn_characters';
+        $wpdb->update(
+            $table_name,
+            ['role' => $mapped_role],
+            ['user_id' => $user_id],
+            ['%s'],
+            ['%d']
+        );
+    }
+}
