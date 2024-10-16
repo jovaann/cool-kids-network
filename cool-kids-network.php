@@ -24,3 +24,9 @@ function ckn_enqueue_scripts() {
 require_once plugin_dir_path(__FILE__) . 'includes/class-character.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-rest-api.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-views.php';
+
+// Initialize REST API routes
+add_action('rest_api_init', function() {
+    $api = new CKN_REST_API();
+    $api->register_routes();
+});
