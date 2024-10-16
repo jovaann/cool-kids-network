@@ -30,3 +30,43 @@ add_action('rest_api_init', function() {
     $api = new CKN_REST_API();
     $api->register_routes();
 });
+
+// Register activation hook to set up roles and database
+register_activation_hook(__FILE__, 'ckn_activate_plugin');
+
+function ckn_activate_plugin() {
+    // Add custom roles
+    add_role('cool_kid', 'Cool Kid', [
+        'read' => true, 
+        'view_own_character' => true,
+    ]);
+    add_role('cooler_kid', 'Cooler Kid', [
+        'read' => true, 
+        'view_own_character' => true,
+        'view_other_characters' => true,
+    ]);
+    add_role('coolest_kid', 'Coolest Kid', [
+        'read' => true, 
+        'view_own_character' => true,
+        'view_other_characters' => true,
+        'view_email_and_role' => true,
+    ]);
+
+    // Create custom database for character data
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'ckn_characters';
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE $table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        user_id bigint(20) NOT NULL,
+        first_name varchar(50) NOT NULL,
+        last_name varchar(50) NOT NULL,
+        country varchar(50) NOT NULL,
+        role varchar(20) NOT NULL DEFAULT 'Cool Kid',
+        PRIMARY KEY  (id)
+    ) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+}
