@@ -68,3 +68,31 @@ function ckn_render_login_form() {
         </div>
     ';
 }
+
+// Fetch users with roles 'Cool Kid', 'Cooler Kid', 'Coolest Kid'
+function ckn_get_users_by_role() {
+    $args = [
+        'role__in' => ['cool_kid', 'cooler_kid', 'coolest_kid'],
+        'fields' => ['ID', 'user_email'],
+    ];
+
+    $users = get_users($args);
+    $user_data = [];
+
+    foreach ($users as $user) {
+        $user_id = $user->ID;
+        $character = new CKN_Character();
+        $character_data = $character->get_character($user_id);
+
+        if ($character_data) {
+            $user_data[] = [
+                'name' => $character_data['first_name'] . ' ' . $character_data['last_name'],
+                'country' => $character_data['country'],
+                'email' => $user->user_email,
+                'role' => $character_data['role'],
+            ];
+        }
+    }
+
+    return $user_data;
+}
