@@ -96,3 +96,11 @@ function ckn_update_character_role($user_id, $new_role, $old_roles) {
         );
     }
 }
+
+// Remove roles when the plugin is deactivated
+register_deactivation_hook(__FILE__, 'ckn_deactivate_plugin');
+function ckn_deactivate_plugin() {
+    remove_role('cool_kid');
+    remove_role('cooler_kid');
+    remove_role('coolest_kid');
+}
