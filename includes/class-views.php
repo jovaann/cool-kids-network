@@ -128,6 +128,13 @@ function ckn_render_character_view() {
     );
     $output .= '</div>';
 
+    $output .= '
+        <div class="ckn-logout-button-container">
+            <button id="ckn-logout-button" class="ckn-button">Log Out</button>
+        </div>
+        <div id="ckn-logout-message" class="ckn-message green" style="display: none;">Logout successful!</div>
+    ';
+
     if (in_array('cooler_kid', $current_user->roles) || in_array('coolest_kid', $current_user->roles)) {
         $users = ckn_get_users_by_role();
 
