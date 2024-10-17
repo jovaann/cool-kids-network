@@ -11,9 +11,9 @@ Cool Kids Network is a proof of concept membership WordPress plugin.
 
 **Usage:**
 Plugin offers 3 shortcodes:
-  -- [ckn_registration] : Adds registration form
-  -- [ckn_login] : Adds login form
-  -- [ckn_character] : Adds my character panel
+- [ckn_registration] : Adds registration form
+- [ckn_login] : Adds login form
+- [ckn_character] : Adds my character panel
 
 **How it works:**
 The Cool Kids Network plugin is a custom WordPress plugin that allows users to register, log in, and manage characters based on specific roles: Cool Kid, Cooler Kid, and Coolest Kid. When users register, a character (name, country, etc.) is generated for them using the randomuser.me API, and they are assigned the "Cool Kid" role by default.
