@@ -109,3 +109,12 @@ function ckn_deactivate_plugin() {
 add_shortcode('ckn_registration', 'ckn_render_registration_form');
 add_shortcode('ckn_login', 'ckn_render_login_form');
 add_shortcode('ckn_character', 'ckn_render_character_view');
+
+// Register custom AJAX handler for logout
+add_action('wp_ajax_ckn_logout', 'ckn_handle_ajax_logout');
+add_action('wp_ajax_nopriv_ckn_logout', 'ckn_handle_ajax_logout');
+
+function ckn_handle_ajax_logout() {
+    wp_logout();
+    wp_send_json_success('Logout successful');
+}
