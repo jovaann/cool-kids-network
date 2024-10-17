@@ -1,7 +1,20 @@
 <?php
 
-// Registration logic
+// Registration logic with "already logged in" check
 function ckn_render_registration_form() {
+    // Check if the user is logged in
+    if (is_user_logged_in()) {
+        // Display "Already logged in" message with a logout button
+        return '
+            <div class="ckn-message">You are already logged in.</div>
+            <div class="ckn-logout-button-container">
+                <form method="post" action="' . wp_logout_url(home_url()) . '">
+                    <button type="submit" class="ckn-button">Log Out</button>
+                </form>
+            </div>
+        ';
+    }
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = sanitize_email($_POST['email']);
 
@@ -23,7 +36,9 @@ function ckn_render_registration_form() {
             $character->save_character($user_id, $character_data);
         }
 
-        return '<div class="ckn-message">Registration successful! Your character has been created.</div>';
+        // Redirect to the login page after successful registration
+        wp_redirect(home_url('/login'));
+        exit;
     }
 
     // Registration form
@@ -39,8 +54,22 @@ function ckn_render_registration_form() {
     ';
 }
 
-// Login logic
+
+// Login logic with "already logged in" check
 function ckn_render_login_form() {
+    // Check if the user is already logged in
+    if (is_user_logged_in()) {
+        // Display "Already logged in" message with a logout button
+        return '
+            <div class="ckn-message">You are already logged in.</div>
+            <div class="ckn-logout-button-container">
+                <form method="post" action="' . wp_logout_url(home_url()) . '">
+                    <button type="submit" class="ckn-button">Log Out</button>
+                </form>
+            </div>
+        ';
+    }
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = sanitize_email($_POST['email']);
         $user = get_user_by('email', $email);
