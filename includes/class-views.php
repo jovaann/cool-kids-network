@@ -96,3 +96,99 @@ function ckn_get_users_by_role() {
 
     return $user_data;
 }
+
+// Display character data for logged-in users and a table for Cooler Kid / Coolest Kid
+function ckn_render_character_view() {
+    if (!is_user_logged_in()) {
+        return '<div class="ckn-message">You need to log in to see your character.</div>';
+    }
+
+    $user_id = get_current_user_id();
+    $current_user = wp_get_current_user();
+    $character = new CKN_Character();
+    $data = $character->get_character($user_id);
+
+    if (!$data) {
+        return '<div class="ckn-message">Character not found.</div>';
+    }
+
+    // Logged-in user's character data
+    $output = '<div class="ckn-character-info">';
+    $output .= sprintf(
+        '<h3 class="ckn-section-title">Your Character</h3>
+        <div class="ckn-character-field">Name: %s %s</div>
+        <div class="ckn-character-field">Country: %s</div>
+        <div class="ckn-character-field">Email: %s</div>
+        <div class="ckn-character-field">Role: %s</div>',
+        $data['first_name'],
+        $data['last_name'],
+        $data['country'],
+        wp_get_current_user()->user_email,
+        $data['role']
+    );
+    $output .= '</div>';
+
+    if (in_array('cooler_kid', $current_user->roles) || in_array('coolest_kid', $current_user->roles)) {
+        $users = ckn_get_users_by_role();
+
+        // Table for Cooler Kid (Names, Countries)
+        if (in_array('cooler_kid', $current_user->roles)) {
+            $output .= '<div class="ckn-users-list">';
+            $output .= '<h3 class="ckn-section-title">All Users (Names and Countries)</h3>';
+            $output .= '<table class="ckn-table"><tr><th>Name</th><th>Country</th></tr>';
+
+            foreach ($users as $user) {
+                $output .= sprintf('<tr><td>%s</td><td>%s</td></tr>', $user['name'], $user['country']);
+            }
+
+            $output .= '</table>';
+            $output .= '</div>';
+        }
+
+        // Table for Coolest Kid (Names, Countries, Emails, Roles)
+        if (in_array('coolest_kid', $current_user->roles)) {
+            $output .= '<div class="ckn-users-list">';
+            $output .= '<h3 class="ckn-section-title">All Users (Names, Countries, Emails, and Roles)</h3>';
+            $output .= '<table class="ckn-table"><tr><th>Name</th><th>Country</th><th>Email</th><th>Role</th></tr>';
+
+            foreach ($users as $user) {
+                $output .= sprintf(
+                    '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
+                    $user['name'],
+                    $user['country'],
+                    $user['email'],
+                    $user['role']
+                );
+            }
+
+            $output .= '</table>';
+            $output .= '</div>';
+
+            // Role change form
+            $output .= '<div class="ckn-role-change-form">';
+            $output .= '
+                <h3 class="ckn-section-title">Change User Role</h3>
+                <form method="POST" id="role-change-form" class="ckn-form">
+                    <label for="email">User Email:</label>
+                    <input type="email" name="email" id="email" class="ckn-input" required>
+
+                    <label for="role">Select New Role:</label>
+                    <select name="role" id="role" class="ckn-input">
+                        <option value="Cool Kid">Cool Kid</option>
+                        <option value="Cooler Kid">Cooler Kid</option>
+                        <option value="Coolest Kid">Coolest Kid</option>
+                    </select>
+
+                    <label for="secret_key">Secret API Key: (secret_api_key)</label>
+                    <input type="password" name="secret_key" id="secret_key" class="ckn-input" required>
+
+                    <button type="submit" class="ckn-button">Change Role</button>
+                </form>
+                <div id="role-change-message" class="ckn-message"></div>
+            ';
+            $output .= '</div>';
+        }
+    }
+
+    return $output;
+}
