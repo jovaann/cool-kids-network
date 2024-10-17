@@ -35,3 +35,9 @@ Example:
 
 
 Demo: https://sabiotradeiodv.wpengine.com/
+
+Cool Kid - test2@test.com
+
+Cooler Kid - test1@test.com
+
+Coolest Kid - test@test.com
